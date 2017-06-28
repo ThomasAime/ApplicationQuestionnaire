@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+
+<p:outputLabel value="Test affichage question"></p:outputLabel>
+
+	<f:view>
+		<h:form>
+			<h:outputLabel value="#{Questions.questionCourante.enonce}"/>
+			
+			
+   				
+      			  <h:selectOneRadio id= "RadioButtonReponse" value = "#{Questions.message}" rendered="#{Questions.questionCourante.type == '1'}">
+      			  
+          			  <f:selectItems value="#{Questions.questionCourante.listeReponsesQuestion}"/>
+          			  
+      			  </h:selectOneRadio>
+      			  
+      			   <h:selectManyCheckbox id= "CheckBoxReponse" value = "#{Questions.message}" rendered="#{Questions.questionCourante.type == '2'}">
+          			  <f:selectItems value="#{Questions.questionCourante.listeReponsesQuestion}" />
+      		      </h:selectManyCheckbox>
+      			  
+       		      
+      		      
+   				 
+			
+		</h:form>
+	</f:view>
+
+</html>
