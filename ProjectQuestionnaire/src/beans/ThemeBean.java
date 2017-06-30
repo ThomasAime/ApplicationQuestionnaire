@@ -43,6 +43,7 @@ public class ThemeBean {
 	{
 		this.getAllThemes();
 	}
+	
 	//Récuperation de la liste des themes 
 	@SuppressWarnings("deprecation")
 	public String getAllThemes() {

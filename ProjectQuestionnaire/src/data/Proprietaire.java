@@ -1,24 +1,45 @@
 package data;
 
+import java.util.List;
+
+import javax.faces.bean.SessionScoped;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "proprietaire")
+@SessionScoped
 public class Proprietaire {
 
 	private int idProprietaire;
 	private String ville;
-	private String nom;
+	private String nomProprietaire;
 	
+	private List<Questionnaire> listeQuestionnaires;
+	
+	@OneToMany
+	public List<Questionnaire> getListeQuestionnaires()
+	{
+		return this.listeQuestionnaires;
+	}
+	
+	public void setListeQuestionnaires(List<Questionnaire> list)
+	{
+		this.listeQuestionnaires=list;
+	}
+	
+	@Id	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column (name="IdProprietaire", nullable=false)
 	public int getIdProprietaire()
 	{
 		return this.idProprietaire;
-	}
-	
-	public String getVille()
-	{
-		return this.ville;
-	}
-	
-	public String getNom()
-	{
-		return this.nom;
 	}
 	
 	public void setIdProprietaire(int i)
@@ -26,14 +47,27 @@ public class Proprietaire {
 		this.idProprietaire=i;
 	}
 	
+	@Column (name="VilleProprietaire")
+	public String getVille()
+	{
+		return this.ville;
+	}
+	
 	public void setVille(String v)
 	{
 		this.ville=v;
 	}
 	
-	public void setNom(String n)
+	
+	@Column (name="NomProprietaire")
+	public String getNomProprietaire()
 	{
-		this.nom=n;
+		return this.nomProprietaire;
+	}
+	
+	public void setNomProprietaire(String n)
+	{
+		this.nomProprietaire=n;
 	}
 	
 }

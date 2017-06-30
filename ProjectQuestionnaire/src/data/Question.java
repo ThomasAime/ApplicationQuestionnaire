@@ -1,6 +1,7 @@
 package data;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.faces.bean.ApplicationScoped;
@@ -12,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -53,8 +55,23 @@ public class Question implements Serializable{
 	
 	private int theme;
 	
-	
 	private List<ReponseQuestion> ListeReponsesQuestion;
+	
+	private List<Questionnaire> questionnaire;
+	
+	
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "listeQuestions")
+	public List<Questionnaire> getQuestionnaire()
+	{
+		return this.questionnaire;
+	}
+	
+	public void setQuestionnaire(List<Questionnaire> q)
+	{
+		this.questionnaire=q;
+	}
+	
 	
 	@OneToMany(mappedBy="question", fetch = FetchType.EAGER)
 	public List<ReponseQuestion> getListeReponsesQuestion()

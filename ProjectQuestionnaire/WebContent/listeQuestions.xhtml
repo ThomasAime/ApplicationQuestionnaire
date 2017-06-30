@@ -14,7 +14,7 @@
             <ul>
             
             
-            	<ui:repeat var="listeQuest" value="#{Questions.listeQuestions}">
+            	<ui:repeat var="listeQuest" value="#{Questionnaires.questionnaire.listeQuestions}">
             		<h:outputLabel value="Enonce : "/>
             		<li>#{listeQuest.enonce}</li>
             		<h:outputLabel value="nomCreateur : "/>

@@ -27,14 +27,20 @@
 		
 	<!-- mettre ici le mapping vers le fichier de correspondance entre les atributs de la classe et la table -->
    		
-   		<mapping class="data.Question"/>
+   		<mapping class="data.Question"/>	
    		<mapping class="data.Theme"/>
    		<mapping class="data.ReponseQuestion"/>
+   		<mapping class="data.ReponseCandidat"/>
+   		<mapping class="data.Questionnaire"/>
+   		<mapping class="data.Proprietaire"/>
+   		
+   		
+   		
    		
    		
    		<!--
    		<mapping class="data.Proprietaire"/>   		
-   		<mapping class="data.Questionnaire"/>
+   		
    		
    -->
    

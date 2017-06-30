@@ -15,7 +15,7 @@
 	<h:form>
 		 <h:outputLabel value="Liste Themes"/>
             	<ui:repeat var="listThem" value="#{Themes.listeThemes}">
-            		<h:commandButton value="#{listThem.nomTheme}" action="#{Questions.getQuestionByTheme(listThem.idTheme)}" />
+            		<h:commandButton value="#{listThem.nomTheme}" action="#{Questionnaires.ListeQuestionsAleatoire(listThem.idTheme)}" />
             		
             	</ui:repeat>       
             	

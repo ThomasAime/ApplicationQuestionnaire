@@ -22,14 +22,22 @@
 	
 	  -->
 	  
+	  <servlet>
+		<servlet-name>QuestionnaireBean</servlet-name>
+		<servlet-class>beans.QuestionnaireBean</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>QuestionnaireBean</servlet-name>
+		<url-pattern>/listeQuestions</url-pattern>
+	</servlet-mapping>
 	  
 	<servlet>
-		<servlet-name>Question</servlet-name>
-		<servlet-class>beans.QuestionBean</servlet-class>
+		<servlet-name>PasserQuestionnaire</servlet-name>
+		<servlet-class>beans.QuestionnaireBean</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>Question</servlet-name>
+		<servlet-name>PasserQuestionnaire</servlet-name>
 		<url-pattern>/PasserQuestionnaire</url-pattern>
 	</servlet-mapping>
 	
