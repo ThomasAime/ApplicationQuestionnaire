@@ -26,34 +26,7 @@ public class ReponseQuestion {
 	private Boolean bonneReponse;
 	
 	private Question question;
-	
-	private List<ReponseCandidat> listeReponsesCandidat;
-	
-	@OneToMany(mappedBy="reponseQuestion", fetch = FetchType.EAGER)
-	public List<ReponseCandidat> getListeReponsesCandidat()
-	{
-		return this.listeReponsesCandidat;
-	}
-	
-	public void setListeReponsesCandidat(List<ReponseCandidat> list)
-	{
-		this.listeReponsesCandidat=list;
-	}
-	
-	@ManyToOne
-	@JoinColumn(name="IdQuestion", nullable=false)
-	public Question getQuestion()
-	{
-		return this.question;
-	}
-	
-	public void setQuestion(Question q)
-	{
-		this.question=q;
-	}
-	
-	
-	
+		
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name="IdReponseQuestion", nullable=false)
@@ -78,13 +51,50 @@ public class ReponseQuestion {
 	{
 		this.idReponse=i;
 	}
+	
 	public void setEnonceReponse(String e)
 	{
 		this.enonceReponse=e;
 	}
+	
 	public void setBonneReponse(Boolean b)
 	{
 		this.bonneReponse=b;
 	}
+	
+	@ManyToOne
+	@JoinColumn(name="IdQuestion", nullable=false)
+	public Question getQuestion()
+	{
+		return this.question;
+	}
+	
+	public void setQuestion(Question q)
+	{
+		this.question=q;
+	}
+	
+	//surcharge de la méthode toString pour pouvoir afficher les enoncés des reponses de question
+	public String toString()
+	{
+		return this.enonceReponse;
+	}
+	
+	/*
+	 * Solution utilisée lorsque association ManyToOne avec ReponseCandidat mis en place
+	 * 
+	private List<ReponseCandidat> listeReponsesCandidat;
+	
+	@OneToMany(mappedBy="reponseQuestion", fetch = FetchType.EAGER)
+	public List<ReponseCandidat> getListeReponsesCandidat()
+	{
+		return this.listeReponsesCandidat;
+	}
+	
+	public void setListeReponsesCandidat(List<ReponseCandidat> list)
+	{
+		this.listeReponsesCandidat=list;
+	}
+	*/
 	
 }

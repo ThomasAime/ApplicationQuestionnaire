@@ -20,19 +20,9 @@ public class Proprietaire {
 	private int idProprietaire;
 	private String ville;
 	private String nomProprietaire;
-	
 	private List<Questionnaire> listeQuestionnaires;
 	
-	@OneToMany
-	public List<Questionnaire> getListeQuestionnaires()
-	{
-		return this.listeQuestionnaires;
-	}
 	
-	public void setListeQuestionnaires(List<Questionnaire> list)
-	{
-		this.listeQuestionnaires=list;
-	}
 	
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +35,17 @@ public class Proprietaire {
 	public void setIdProprietaire(int i)
 	{
 		this.idProprietaire=i;
+	}
+	
+	@OneToMany
+	public List<Questionnaire> getListeQuestionnaires()
+	{
+		return this.listeQuestionnaires;
+	}
+	
+	public void setListeQuestionnaires(List<Questionnaire> list)
+	{
+		this.listeQuestionnaires=list;
 	}
 	
 	@Column (name="VilleProprietaire")

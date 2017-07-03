@@ -17,13 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import dao.QuestionDAO;
 import beans.ReponseQuestionBean;
-
-/*
- * version avant integration hibernate
-@ManagedBean(name = "Questions")
-@SessionScoped*/
 
 @Entity
 @Table(name = "question")
@@ -31,60 +25,14 @@ import beans.ReponseQuestionBean;
 //@ApplicationScoped
 public class Question implements Serializable{
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8985762883582831252L;
-
-
-	private int idQuestion;
-	
-	
-	private int type;
-	
-	
-	private String nomCreateur ;
-	
-	
-	private String enonce;
-	
-	
-	private int poids;
-	
-	
+	private int idQuestion;	
+	private int type;	
+	private String nomCreateur ;	
+	private String enonce;	
+	private int poids;	
 	private int theme;
-	
 	private List<ReponseQuestion> ListeReponsesQuestion;
-	
-	private List<Questionnaire> questionnaire;
-	
-	
-	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "listeQuestions")
-	public List<Questionnaire> getQuestionnaire()
-	{
-		return this.questionnaire;
-	}
-	
-	public void setQuestionnaire(List<Questionnaire> q)
-	{
-		this.questionnaire=q;
-	}
-	
-	
-	@OneToMany(mappedBy="question", fetch = FetchType.EAGER)
-	public List<ReponseQuestion> getListeReponsesQuestion()
-	{
-		return this.ListeReponsesQuestion;
-	}
-	
-	public void setListeReponsesQuestion(List<ReponseQuestion> list)
-	{
-		this.ListeReponsesQuestion=list;
-	}
-	
-	
 	
 	public Question(){	}
 	
@@ -133,6 +81,7 @@ public class Question implements Serializable{
 	{
 		this.nomCreateur=n;
 	}
+	
 	@Column(name = "Poids")
 	public int getPoids()
 	{
@@ -142,6 +91,7 @@ public class Question implements Serializable{
 	{
 		this.poids=p;
 	}
+	
 	@Column(name = "IdTheme")
 	public int getTheme()
 	{
@@ -152,21 +102,32 @@ public class Question implements Serializable{
 	{
 		this.theme=t;
 	}
+	
+	@OneToMany(mappedBy="question", fetch = FetchType.EAGER)
+	public List<ReponseQuestion> getListeReponsesQuestion()
+	{
+		return this.ListeReponsesQuestion;
+	}
+	
+	public void setListeReponsesQuestion(List<ReponseQuestion> list)
+	{
+		this.ListeReponsesQuestion=list;
+	}
+	
 	/*
-	 public void saveQuestion() {
-	     QuestionDAO dao = new QuestionDAO();
-	     dao.addQuestion(this);
-	     clearAll();
-	    }
-	 */
-	 
-	 public void clearAll()
-	 {
-		 this.enonce="";
-		 this.idQuestion=0;
-		 this.nomCreateur="";
-		 this.poids=0;
-		 this.theme=0;
-		 this.type=0;
-	 }
+	private List<Questionnaire> questionnaire;
+	
+	//manytomany multidirectinonel : pas besoin, les questions n'ont pas a acceder aux questionnaires
+	
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "listeQuestions")
+	public List<Questionnaire> getQuestionnaire()
+	{
+		return this.questionnaire;
+	}
+	
+	public void setQuestionnaire(List<Questionnaire> q)
+	{
+		this.questionnaire=q;
+	}*/
+	
 }

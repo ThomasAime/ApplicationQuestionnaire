@@ -14,20 +14,25 @@
 			
 			
    				
-      			  <h:selectOneRadio id= "RadioButtonReponse" value = "#{Questionnaires.message}" rendered="#{Questionnaires.questionCourante.type == '1'}">
+      			  <h:selectOneRadio id= "RadioButtonReponse" value = "#{Questionnaires.reponseQuestion}" rendered="#{Questionnaires.questionCourante.type == '1'}">
       			  
-          			  <f:selectItems  value="#{Questionnaires.questionCourante.listeReponsesQuestion}"/>
+      			  	  <f:converter converterId="ReponseQuestionConverter"/>
+          			  <f:selectItems  value="#{Questionnaires.questionCourante.listeReponsesQuestion}" />
+          			  
           			  
       			  </h:selectOneRadio>
       			  
-      			   <h:selectManyCheckbox id= "CheckBoxReponse" value = "#{Questionnaires.messagess}" rendered="#{Questionnaires.questionCourante.type == '2'}">
+      			   <h:selectManyCheckbox id= "CheckBoxReponse" value = "#{Questionnaires.reponsesQuestion}" rendered="#{Questionnaires.questionCourante.type == '2'}" >
+      			   
+      			   <f:converter converterId="ReponseQuestionConverter"/>
           			  <f:selectItems value="#{Questionnaires.questionCourante.listeReponsesQuestion}" />
+          			  
       		      </h:selectManyCheckbox>
       			  
        		      
       		      
    				 
-			<h:commandButton value="Next" action="#{Questionnaires.majQuestionCourante}" />
+			<h:commandButton value="Next" action="#{Questionnaires.majQuestionCourante}" immediate="true"/>
 		</h:form>
 	</f:view>
 

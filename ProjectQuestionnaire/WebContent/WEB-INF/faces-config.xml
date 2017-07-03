@@ -28,4 +28,10 @@
 	</navigation-rule>
 	
 	
+	<converter>
+		<converter-id>ReponseQuestionConverter</converter-id>
+		<converter-class>converters.ReponseQuestionConverter</converter-class>
+	</converter>
+	
+	
 </faces-config>

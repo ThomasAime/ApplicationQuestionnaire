@@ -26,18 +26,13 @@ import javax.persistence.JoinColumn;
 
 import data.Question;
 
-/*
-@ManagedBean(name = "Questionnaire")
-@SessionScoped*/
+
 @Entity
 @Table(name = "questionnaire")
 @SessionScoped
 public class Questionnaire {
 
 	private int idQuestionnaire;
-	
-	
-	//private String note;
 	
 	private Date datePassage;
 	
@@ -51,19 +46,10 @@ public class Questionnaire {
 	
 	private List<Question> listeQuestions = new ArrayList<Question>();
 
-	/*private Proprietaire proprietaire;
+	private List<ReponseQuestion> listeReponseCandidat = new ArrayList<ReponseQuestion>();
 	
-	@ManyToOne
-	@JoinColumn(name="IdProprietaire", nullable=false)
-	public Proprietaire getProprietaire()
-	{
-		return this.proprietaire;
-	}
 	
-	public void setProprietaire(Proprietaire p)
-	{
-		this.proprietaire=p;
-	}*/
+	public Questionnaire(){	}
 	
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,28 +62,7 @@ public class Questionnaire {
 	public void setId(int i)
 	{
 		this.idQuestionnaire=i;
-	}
-	/*
-	public String getNote()
-	{
-		return this.note;
-	}*/
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "question_questionnaire", /*catalog = "mkyongdb",*/ joinColumns = 
-		{@JoinColumn(name = "IdQuestionnaire", nullable = false, updatable = false) },
-			inverseJoinColumns = { @JoinColumn(name = "IdQuestion",
-					nullable = false, updatable = false) })
-	public List<Question> getListeQuestions()
-	{
-		return this.listeQuestions;
-	}
-	
-	public void setListeQuestions(List<Question> q)
-	{
-		this.listeQuestions=q;
-	}
-	
+	}	
 	
 	@Column(name = "DatePassage")
 	public Date getDatePassage()
@@ -155,24 +120,57 @@ public class Questionnaire {
 		this.dureeRealise=dr;
 	}
 	
-	
-	
-	public Questionnaire()
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "question_questionnaire", /*catalog = "mkyongdb",*/ joinColumns = 
+		{@JoinColumn(name = "IdQuestionnaire", nullable = false, updatable = false) },
+			inverseJoinColumns = { @JoinColumn(name = "IdQuestion",
+					nullable = false, updatable = false) })
+	public List<Question> getListeQuestions()
 	{
+		return this.listeQuestions;
+	}
+	
+	public void setListeQuestions(List<Question> q)
+	{
+		this.listeQuestions=q;
+	}
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "reponse_candidat", /*catalog = "mkyongdb",*/ joinColumns = 
+		{@JoinColumn(name = "IdQuestionnaire", nullable = false, updatable = false) },
+			inverseJoinColumns = { @JoinColumn(name = "IdReponseQuestion",
+					nullable = false, updatable = false) })
+	public List<ReponseQuestion> getListeReponseCandidat()
+	{
+		return this.listeReponseCandidat;
+	}
+	
+	public void setListeReponseCandidat(List<ReponseQuestion> q)
+	{
+		this.listeReponseCandidat=q;
+	}
+	
+	public void AddReponseQuestionListe(ReponseQuestion rq)
+	{
+		this.listeReponseCandidat.add(rq);
+	}
+	
+	
+	//private String note;
+	
+		/*private Proprietaire proprietaire;
 		
-	}
-	
-	/*@PostConstruct
-	public void genererQuestionnaire()
-	{
-		for(int i =1; i<=15;i++)
+		@ManyToOne
+		@JoinColumn(name="IdProprietaire", nullable=false)
+		public Proprietaire getProprietaire()
 		{
-			Question q = new Question();
-		//	q.setId(String.valueOf(i));
-		//	q.setReponse("quelle est la valeur de "+i);
-			this.questions.add(q);	
+			return this.proprietaire;
 		}
-	}
-	*/
+		
+		public void setProprietaire(Proprietaire p)
+		{
+			this.proprietaire=p;
+		}*/
+	
 	
 }

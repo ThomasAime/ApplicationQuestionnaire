@@ -21,7 +21,7 @@
 		<property name="connection.password"></property>
 		<property name="current_session_context_class">thread</property>
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="connection.pool_size">100</property>
+		<property name="connection.pool_size">1</property>
 		<property name="show_sql">true</property>
    		<property name="format_sql">true</property>
 		
@@ -33,16 +33,9 @@
    		<mapping class="data.ReponseCandidat"/>
    		<mapping class="data.Questionnaire"/>
    		<mapping class="data.Proprietaire"/>
+	
    		
    		
-   		
-   		
-   		
-   		<!--
-   		<mapping class="data.Proprietaire"/>   		
-   		
-   		
-   -->
    
     </session-factory>
 

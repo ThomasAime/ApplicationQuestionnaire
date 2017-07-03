@@ -19,86 +19,82 @@ import HibernateUtil.HibernateUtil;
 import data.*;
 
 @ManagedBean(name = "Questionnaires")
-//@SessionScoped
 @ApplicationScoped
 public class QuestionnaireBean implements Serializable {
 
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 7204550524050005481L;
 
+	//questionnaire en train d'être passé par le candiadt
 	private Questionnaire questionnaire = new Questionnaire();
 	
-	//contient la liste de toutes les questions pour le theme choisi
+	//liste des questions du questionnaire
 	private List<Question> listeQuestions;
 	
+	//Liste du/des thèmes choisis pour le questionnaire
 	private List<Theme> listeThemes;
 	
+	//question courante du questionnaire, pour se représenter par rapport à la liste
 	private Question questionCourante;
 	
-	//-----------------------------------------------
-	private ReponseCandidat repCand;
+	//reponse à une question de type Radio
+	private ReponseQuestion reponseQuestion;
 	
-	public ReponseCandidat getRepCand() {
-		return repCand;
+	//Reponse(s) à une question de type checkBox
+	private  ReponseQuestion[] reponsesQuestion;	
+	
+	
+	public QuestionnaireBean(){	}
+	
+	
+	public Questionnaire getQuestionnaire() {
+		return questionnaire;
 	}
 
-	public void setRepCand(ReponseCandidat repCand) {
-		this.repCand = repCand;
+	public void setQuestionnaire(Questionnaire questionnaire) {
+		this.questionnaire = questionnaire;
 	}
 	
-	//-----------------------------------------------	
 	
-	/*
-	private List<ReponseCandidat> listeReponsesCandidat;
-	
-	@OneToMany(mappedBy="questionnaire", fetch = FetchType.EAGER)
-	public List<ReponseCandidat> getListeReponsesCandidat() {
-		return listeReponsesCandidat;
-	}
-	
-	public void setListeReponsesCandidat(List<ReponseCandidat> listeReponsesCandidat) {
-		this.listeReponsesCandidat = listeReponsesCandidat;
-	}
-	
-	public void addReponseCandidat(ReponseCandidat r)
+	public List<Question> getListeQuestions()
 	{
-		this.listeReponsesCandidat.add(r);
+		return this.listeQuestions;
 	}
-	*/
 	
-	//temporaire, pour effectuer tests
-	 private String message;
-		
-	 public String getMessage()
-	 {
-		 return this.message;
-	 }
-	 
-	 public void SetMessage(String m)
-	 {
-		 this.message=m;
-	 }
-	 
-	 private String[] messagess;
-	 
-	public String[] getMessagess()
+	public void setListeQuestions(List<Question> list)
 	{
-		return this.messagess;
+		this.listeQuestions=list;
 	}
 	
-	public void setMessagess(String[] t)
+	
+	public List<Theme> getListeThemes()
 	{
-		this.messagess=t;
+		return this.listeThemes;
+	}
+
+	public void setListeThemes(List<Theme> list)
+	{
+		this.listeThemes=list;
 	}
 	
-	
-	public QuestionnaireBean(){
-		
+	public ReponseQuestion getReponseQuestion() {
+		return reponseQuestion;
+	}
+
+	public void setReponseQuestion(ReponseQuestion rep) {
+		this.reponseQuestion = rep;
+	}
+	//tableau de réponses(pour les checkboxes)
+	public ReponseQuestion[] getReponsesQuestion() {
+		return reponsesQuestion;
+	}
+
+	public void setReponsesQuestion(ReponseQuestion[] repp) {
+		this.reponsesQuestion = repp;
 	}
 	
+
+	//question courante du questionnaire
 	public Question getQuestionCourante()
 	{
 		return this.questionCourante;
@@ -108,41 +104,94 @@ public class QuestionnaireBean implements Serializable {
 		this.questionCourante=q;
 	}
 	
+	//mise à jour de la question en cours : question que le candidat est en train de répondre
 	public void majQuestionCourante()
 	{
-		SaveReponseCandidat();
-		// verif is null de la question
-		if (questionCourante != null) {
-			this.questionCourante = this.questionnaire.getListeQuestions().get(this.questionnaire.getListeQuestions().indexOf(questionCourante)+1);
+		
+		//SaveReponseCandidat();
+		
+		//enregistrement de la réponse donnée par le candidat
+		
+		System.out.println("Enregistrement reponse Candidat ");
+		
+		if(this.reponseQuestion!=null)
+		{
+			System.out.println("valeur de rep : " + reponseQuestion.getEnonceReponse()+reponseQuestion.getBonneReponse());
+			this.questionnaire.AddReponseQuestionListe(this.reponseQuestion);
+			this.reponseQuestion=new ReponseQuestion();
+		}
+		if(reponsesQuestion!=null)
+		{
+			for(int i = 0;i< reponsesQuestion.length;i++)
+			{
+				System.out.println("valeur de rep : " + reponsesQuestion[i].getEnonceReponse()+reponsesQuestion[i].getBonneReponse());
+				this.questionnaire.AddReponseQuestionListe(reponsesQuestion[i]);
+			}
+			this.reponsesQuestion=new ReponseQuestion[10];
+		}
+		
+		System.out.println("Enregistrement fini");
+		
+		if(this.questionnaire.getListeQuestions().size()-1==this.questionnaire.getListeQuestions().indexOf(questionCourante))
+		{
+			System.out.println("Sauvegarde questionnaire");
+			saveQuestionnaire();
 		}
 		else
 		{
-			questionCourante=this.questionnaire.getListeQuestions().get(0);
 			
+			// verif is null de la question
+			if (questionCourante != null) {
+				System.out.println("passage question suivante");
+				this.questionCourante = this.questionnaire.getListeQuestions().get(this.questionnaire.getListeQuestions().indexOf(questionCourante)+1);
+			}
+			else
+			{
+				System.out.println("recuperation premiere question");
+				questionCourante=this.questionnaire.getListeQuestions().get(0);
+				
+			}
+			System.out.println("fini");
 		}
-		System.out.println("enonce : "+questionCourante.getEnonce());
 	}
 	
+	//enregistrement de la réponse du candidat pour la question
 	public void SaveReponseCandidat()
 	{
 		Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         
-        ReponseCandidat r = new ReponseCandidat();
-        	session.save(r);
-        	r.setQuestionnaire(this.questionnaire);
+     //   ReponseCandidat r = new ReponseCandidat(this.questionnaire,this.listeQuestions.get(0).getListeReponsesQuestion().get(0));
+       // r.setQuestionnaire(this.questionnaire);	
+  //      session.save(r);
+        	
         session.getTransaction().commit();
         session.close();
 	}
 	
+	//Enregistrement du questionnaire dans la bd
+	public void saveQuestionnaire()
+	{
+		Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        
+        session.save(this.questionnaire);
+        session.getTransaction().commit();
+        session.close();
+	}
+	
+	
+	//Méthode pour récuperer(par query) la liste des questions aléatoires pour le questionnaire à faire passer
 	//eventuellement pour la suite rajouter un parametre pour choisir le nombre de questions
 	public String ListeQuestionsAleatoire(int idtheme)
 	{
+		//variable pour choisir le nombre de questions que contiendra le questionnaire
 		int nbQuestion = 5;
 		
 		String res;
 		res = this.ListeQuestionByTheme(idtheme);
 		System.out.println("Resultat listeQuestionByTheme : " + res);
+		
 		//On recherche un random ssi la recherche des questions par theme a bien retourné un résultat
 		if (res=="success")
 		{
@@ -174,6 +223,7 @@ public class QuestionnaireBean implements Serializable {
 	}
 	
 	
+	//recupération (par query) de la liste de toutes les questions avec le même theme
 	//suppressWarning obligatoire 
 	@SuppressWarnings("deprecation")
 	public String ListeQuestionByTheme(int idtheme){
@@ -204,36 +254,50 @@ public class QuestionnaireBean implements Serializable {
         return "success";
     }
 	
+	/*
+	private List<ReponseCandidat> listeReponsesCandidat;
 	
-	
-	
-	public void setListeQuestions(List<Question> list)
-	{
-		this.listeQuestions=list;
-	}
-	public List<Question> getListeQuestions()
-	{
-		return this.listeQuestions;
+	@OneToMany(mappedBy="questionnaire", fetch = FetchType.EAGER)
+	public List<ReponseCandidat> getListeReponsesCandidat() {
+		return listeReponsesCandidat;
 	}
 	
-	public void setListeThemes(List<Theme> list)
-	{
-		this.listeThemes=list;
+	public void setListeReponsesCandidat(List<ReponseCandidat> listeReponsesCandidat) {
+		this.listeReponsesCandidat = listeReponsesCandidat;
 	}
-	public List<Theme> getListeThemes()
+	
+	public void addReponseCandidat(ReponseCandidat r)
 	{
-		return this.listeThemes;
+		this.listeReponsesCandidat.add(r);
 	}
+	*/
+	
+	
+	/* private String message = new String();
 
-	public Questionnaire getQuestionnaire() {
-		return questionnaire;
-	}
+	 private String[] messagess;
+	 
 
-	public void setQuestionnaire(Questionnaire questionnaire) {
-		this.questionnaire = questionnaire;
-	}
+		public String getMessage() {
+			return message;
+		}
 
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
+		public String[] getMessagess() {
+			return messagess;
+		}
+
+		public void setMessagess(String[] messagess) {
+			this.messagess = messagess;
+		}
+
+		*/
 	
+	
+
 
 	
 	
