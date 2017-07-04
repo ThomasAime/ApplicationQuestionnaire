@@ -1,6 +1,8 @@
 package data;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -49,7 +51,9 @@ public class Questionnaire {
 	private List<ReponseQuestion> listeReponseCandidat = new ArrayList<ReponseQuestion>();
 	
 	
-	public Questionnaire(){	}
+	public Questionnaire(){	
+		this.datePassage= new Date();
+	}
 	
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -121,7 +125,7 @@ public class Questionnaire {
 	}
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "question_questionnaire", /*catalog = "mkyongdb",*/ joinColumns = 
+	@JoinTable(name = "question_questionnaire", joinColumns = 
 		{@JoinColumn(name = "IdQuestionnaire", nullable = false, updatable = false) },
 			inverseJoinColumns = { @JoinColumn(name = "IdQuestion",
 					nullable = false, updatable = false) })
@@ -136,7 +140,7 @@ public class Questionnaire {
 	}
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "reponse_candidat", /*catalog = "mkyongdb",*/ joinColumns = 
+	@JoinTable(name = "reponse_candidat",joinColumns = 
 		{@JoinColumn(name = "IdQuestionnaire", nullable = false, updatable = false) },
 			inverseJoinColumns = { @JoinColumn(name = "IdReponseQuestion",
 					nullable = false, updatable = false) })
@@ -150,7 +154,7 @@ public class Questionnaire {
 		this.listeReponseCandidat=q;
 	}
 	
-	public void AddReponseQuestionListe(ReponseQuestion rq)
+	public void AddReponseQuestionListeReponseCandidat(ReponseQuestion rq)
 	{
 		this.listeReponseCandidat.add(rq);
 	}

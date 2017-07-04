@@ -38,13 +38,15 @@ public class QuestionnaireBean implements Serializable {
 	private Question questionCourante;
 	
 	//reponse à une question de type Radio
-	private ReponseQuestion reponseQuestion;
+	private ReponseQuestion reponseQuestion= new ReponseQuestion();
 	
 	//Reponse(s) à une question de type checkBox
-	private  ReponseQuestion[] reponsesQuestion;	
+	private  List<ReponseQuestion> reponsesQuestion= new ArrayList<ReponseQuestion>();	
 	
 	
-	public QuestionnaireBean(){	}
+	public QuestionnaireBean(){	
+		
+	}
 	
 	
 	public Questionnaire getQuestionnaire() {
@@ -85,11 +87,11 @@ public class QuestionnaireBean implements Serializable {
 		this.reponseQuestion = rep;
 	}
 	//tableau de réponses(pour les checkboxes)
-	public ReponseQuestion[] getReponsesQuestion() {
+	public List<ReponseQuestion> getReponsesQuestion() {
 		return reponsesQuestion;
 	}
 
-	public void setReponsesQuestion(ReponseQuestion[] repp) {
+	public void setReponsesQuestion(List<ReponseQuestion> repp) {
 		this.reponsesQuestion = repp;
 	}
 	
@@ -110,30 +112,50 @@ public class QuestionnaireBean implements Serializable {
 		
 		//SaveReponseCandidat();
 		
-		//enregistrement de la réponse donnée par le candidat
+		//enregistrement de la réponse donnée par le candidat soit par le radio boutton(1 reponse) ou par le check( de 1 a X réponses)
 		
-		System.out.println("Enregistrement reponse Candidat ");
+		System.out.println("Enregistrement reponse Candidat  : ");
+		System.out.println("idReponseRadio : " + this.idReponseRadio);
 		
-		if(this.reponseQuestion!=null)
+		//if(this.reponseQuestion.getEnonceReponse()!=null )
+		//if(this.reponseQuestion.Valid())
+		if(!this.idReponseRadio.isEmpty() && this.idReponseRadio!=null)
 		{
-			System.out.println("valeur de rep : " + reponseQuestion.getEnonceReponse()+reponseQuestion.getBonneReponse());
-			this.questionnaire.AddReponseQuestionListe(this.reponseQuestion);
-			this.reponseQuestion=new ReponseQuestion();
+			System.out.println("AddReponseQuestionListe");
+			this.questionnaire.AddReponseQuestionListeReponseCandidat(this.getReponseQuestionById(idReponseRadio));
+			this.idReponseRadio=new String();
+			//this.reponseQuestion=new ReponseQuestion();
 		}
-		if(reponsesQuestion!=null)
+		
+		//if(this.reponsesQuestion[0].Valid())
+		System.out.println("taille tableau : " + this.idReponseCheck.size());
+		//if (this.messagess!=null && this.messagess.length>0&& this.messagess[0]!=null)
+		//if (this.reponsesQuestion.size()>0)
+		if(this.idReponseCheck!=null&& this.idReponseCheck.size()>0)
 		{
-			for(int i = 0;i< reponsesQuestion.length;i++)
+			for(int i = 0;i < idReponseCheck.size();i++)
 			{
-				System.out.println("valeur de rep : " + reponsesQuestion[i].getEnonceReponse()+reponsesQuestion[i].getBonneReponse());
-				this.questionnaire.AddReponseQuestionListe(reponsesQuestion[i]);
+				// test pour verifier si passe bien par ici
+				System.out.println("AddReponseQuestionListe a partir de la check" + i);
+				this.questionnaire.AddReponseQuestionListeReponseCandidat(this.getReponseQuestionById(idReponseCheck.get(i)));
+				
 			}
-			this.reponsesQuestion=new ReponseQuestion[10];
+			//this.messagess= new String[10];
+			this.idReponseCheck=new ArrayList<String>();
+			//this.reponsesQuestion=new ArrayList<ReponseQuestion>();
 		}
 		
-		System.out.println("Enregistrement fini");
 		
 		if(this.questionnaire.getListeQuestions().size()-1==this.questionnaire.getListeQuestions().indexOf(questionCourante))
 		{
+			
+			System.out.println("test avant sauvegarde questionnaire : ");
+			
+			for(int i = 0;i< this.questionnaire.getListeReponseCandidat().size();i++)
+			{
+				System.out.println(" i : "+i + "  , id :  "+ this.questionnaire.getListeReponseCandidat().get(i).getIdReponse() + " , enonce : " + this.questionnaire.getListeReponseCandidat().get(i).getEnonceReponse());
+			}
+			
 			System.out.println("Sauvegarde questionnaire");
 			saveQuestionnaire();
 		}
@@ -151,7 +173,6 @@ public class QuestionnaireBean implements Serializable {
 				questionCourante=this.questionnaire.getListeQuestions().get(0);
 				
 			}
-			System.out.println("fini");
 		}
 	}
 	
@@ -175,7 +196,15 @@ public class QuestionnaireBean implements Serializable {
 		Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         
-        session.save(this.questionnaire);
+        //enregistrement du questionnaire dans la base
+        //session.save(this.questionnaire);
+        
+        // test avec persist():
+        // session.persist(this.questionnaire);
+        
+        //test avec saveorUpdate
+        
+        session.saveOrUpdate(this.questionnaire);
         session.getTransaction().commit();
         session.close();
 	}
@@ -271,11 +300,44 @@ public class QuestionnaireBean implements Serializable {
 		this.listeReponsesCandidat.add(r);
 	}
 	*/
+	private String idReponseRadio= new String();
+	private List<String> idReponseCheck = new ArrayList<String>();
 	
+	public ReponseQuestion getReponseQuestionById(String idreponse)
+	{
+		ReponseQuestion res = new ReponseQuestion();
+		Transaction trns = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        
+        try {
+            trns = session.beginTransaction();
+            //Query quer= session.createQuery("select nomCreateur from Question");
+            Query quer = session.createSQLQuery("SELECT rq.* FROM reponse_question rq WHERE rq.idReponseQuestion= :idrep").addEntity(ReponseQuestion.class);
+            quer.setParameter("idrep", idreponse);
+            //Modification de la liste des questions du questionnaire 
+           // this.ques.setListeQuestions(quer.list());
+            System.out.println("id reponse : "+ idreponse);
+           res= (ReponseQuestion) quer.list().get(0);
+           
+            
+        } catch (RuntimeException e) {
+        	
+            e.printStackTrace();
+            return null;
+            
+        } finally {
+            session.close();
+        }
+        
+        return res;
+	}
 	
-	/* private String message = new String();
+	/*
+	 private String message = new String();
 
-	 private String[] messagess;
+	 private List<String> messages;
+	 
+	 private String[] messagess = new String[10];
 	 
 
 		public String getMessage() {
@@ -294,7 +356,39 @@ public class QuestionnaireBean implements Serializable {
 			this.messagess = messagess;
 		}
 
-		*/
+
+		public List<String> getMessages() {
+			return messages;
+		}
+
+
+		public void setMessages(List<String> messages) {
+			this.messages = messages;
+		}
+
+
+*/
+	
+		public String getIdReponseRadio() {
+			return idReponseRadio;
+		}
+
+
+		public void setIdReponseRadio(String idReponseRadio) {
+			this.idReponseRadio = idReponseRadio;
+		}
+
+
+		public List<String> getIdReponseCheck() {
+			return idReponseCheck;
+		}
+
+
+		public void setIdReponseCheck(List<String> idReponseCheck) {
+			this.idReponseCheck = idReponseCheck;
+		}
+
+		
 	
 	
 

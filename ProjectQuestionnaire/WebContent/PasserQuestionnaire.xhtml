@@ -3,7 +3,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 	
 
 <p:outputLabel value="Test affichage question"></p:outputLabel>
@@ -13,26 +14,28 @@
 			<h:outputLabel value="#{Questionnaires.questionCourante.enonce}"/>
 			
 			
-   				
-      			  <h:selectOneRadio id= "RadioButtonReponse" value = "#{Questionnaires.reponseQuestion}" rendered="#{Questionnaires.questionCourante.type == '1'}">
+   				 <h:selectOneRadio id= "RadioButtonReponse" value = "#{Questionnaires.idReponseRadio}" rendered="#{Questionnaires.questionCourante.type == '1'}" >
       			  
-      			  	  <f:converter converterId="ReponseQuestionConverter"/>
-          			  <f:selectItems  value="#{Questionnaires.questionCourante.listeReponsesQuestion}" />
+          			  <f:selectItems var = "radio" value="#{Questionnaires.questionCourante.listeReponsesQuestion}" itemLabel="#{radio.enonceReponse}" itemValue="#{radio.idReponse}"/>
           			  
           			  
       			  </h:selectOneRadio>
       			  
-      			   <h:selectManyCheckbox id= "CheckBoxReponse" value = "#{Questionnaires.reponsesQuestion}" rendered="#{Questionnaires.questionCourante.type == '2'}" >
+      			   <h:selectManyCheckbox id= "CheckBoxReponse" value = "#{Questionnaires.idReponseCheck}" rendered="#{Questionnaires.questionCourante.type == '2'}" >
       			   
-      			   <f:converter converterId="ReponseQuestionConverter"/>
-          			  <f:selectItems value="#{Questionnaires.questionCourante.listeReponsesQuestion}" />
+          			  <f:selectItems var = "check" value="#{Questionnaires.questionCourante.listeReponsesQuestion}" itemLabel = "#{check.enonceReponse}" itemValue="#{check.idReponse}"/>
           			  
       		      </h:selectManyCheckbox>
+      		      
+      		      
+      			 
       			  
        		      
       		      
    				 
-			<h:commandButton value="Next" action="#{Questionnaires.majQuestionCourante}" immediate="true"/>
+			<h:commandButton value="Next" action="#{Questionnaires.majQuestionCourante}" />
+			
+        
 		</h:form>
 	</f:view>
 

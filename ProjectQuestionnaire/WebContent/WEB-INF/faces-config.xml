@@ -33,5 +33,9 @@
 		<converter-class>converters.ReponseQuestionConverter</converter-class>
 	</converter>
 	
+	<converter>
+		<converter-id>GenericConverter</converter-id>
+		<converter-class>converters.GenericConverter</converter-class>
+	</converter>
 	
 </faces-config>

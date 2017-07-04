@@ -2,6 +2,7 @@ package data;
 
 import java.util.List;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +17,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "reponse_question")
-@SessionScoped
+//@SessionScoped
+@ApplicationScoped
 public class ReponseQuestion {
 
 	private int idReponse;
@@ -75,10 +77,16 @@ public class ReponseQuestion {
 	}
 	
 	//surcharge de la méthode toString pour pouvoir afficher les enoncés des reponses de question
-	public String toString()
+	/*public String toString()
 	{
 		return this.enonceReponse;
+	}*/
+	
+	public boolean Valid()
+	{
+		return this.idReponse !=0 && this.enonceReponse !=null && this.bonneReponse != null && this.question !=null;
 	}
+	
 	
 	/*
 	 * Solution utilisée lorsque association ManyToOne avec ReponseCandidat mis en place
