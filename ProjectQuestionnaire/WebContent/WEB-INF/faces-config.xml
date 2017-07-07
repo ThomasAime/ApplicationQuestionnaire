@@ -6,20 +6,20 @@
     version="2.2">
     
 	<navigation-rule>
-		<from-view-id>PasserQuestionnaire.xhtml</from-view-id>
+		<from-view-id>/PasserQuestionnaire.xhtml</from-view-id>
 		<navigation-case>	
 			<from-outcome>finQuestionnaire</from-outcome>
 			<to-view-id>/finQuestionnaire.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
-		<from-view-id>index.xhtml</from-view-id>
+		<from-view-id>/index.xhtml</from-view-id>
 		<navigation-case>
 			<to-view-id>/ChoisirTheme.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
-		<from-view-id>ChoisirTheme.xhtml</from-view-id>
+		<from-view-id>/ChoisirTheme.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>success</from-outcome>
 			<to-view-id>/PasserQuestionnaire.xhtml</to-view-id>

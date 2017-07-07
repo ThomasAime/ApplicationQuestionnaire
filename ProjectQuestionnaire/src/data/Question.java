@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import beans.ReponseQuestionBean;
-
 @Entity
 @Table(name = "question")
 @SessionScoped
