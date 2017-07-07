@@ -1,7 +1,6 @@
 package data;
 
 import java.io.Serializable;
-
 import javax.faces.bean.SessionScoped;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +14,6 @@ import javax.persistence.Table;
 @Table(name = "theme")
 @SessionScoped
 public class Theme implements Serializable{
-
-	private static final long serialVersionUID = 8302924006482752984L;
 
 	private int idTheme;
 	

@@ -1,62 +1,54 @@
 package beans;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-
-import org.hibernate.Query;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import HibernateUtil.HibernateUtil;
 import data.*;
 
 @ManagedBean(name = "Questionnaires")
 @ApplicationScoped
-public class QuestionnaireBean implements Serializable {
+public class QuestionnaireBean{
 
-
-	private static final long serialVersionUID = 7204550524050005481L;
-
-	//questionnaire en train d'être passé par le candiadt
 	private Questionnaire questionnaire = new Questionnaire();
 	
-	//liste des questions du questionnaire
 	private List<Question> listeQuestions;
 	
-	//Liste du/des thèmes choisis pour le questionnaire
 	private List<Theme> listeThemes;
 	
-	//question courante du questionnaire, pour se représenter par rapport à la liste
 	private Question questionCourante;
 	
-	//reponse à une question de type Radio
 	private ReponseQuestion reponseQuestion= new ReponseQuestion();
 	
-	//Reponse(s) à une question de type checkBox
 	private  List<ReponseQuestion> reponsesQuestion= new ArrayList<ReponseQuestion>();	
 	
+	private String idReponseRadio= new String();
 	
-	public QuestionnaireBean(){	
-		
-	}
+	private List<String> idReponseCheck = new ArrayList<String>();
 	
+	private ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
 	
-	public Questionnaire getQuestionnaire() {
+	public QuestionnaireBean(){  }
+	
+	public Questionnaire getQuestionnaire() 
+	{
 		return questionnaire;
 	}
 
-	public void setQuestionnaire(Questionnaire questionnaire) {
+	public void setQuestionnaire(Questionnaire questionnaire) 
+	{
 		this.questionnaire = questionnaire;
 	}
-	
 	
 	public List<Question> getListeQuestions()
 	{
@@ -67,7 +59,6 @@ public class QuestionnaireBean implements Serializable {
 	{
 		this.listeQuestions=list;
 	}
-	
 	
 	public List<Theme> getListeThemes()
 	{
@@ -86,7 +77,7 @@ public class QuestionnaireBean implements Serializable {
 	public void setReponseQuestion(ReponseQuestion rep) {
 		this.reponseQuestion = rep;
 	}
-	//tableau de réponses(pour les checkboxes)
+	
 	public List<ReponseQuestion> getReponsesQuestion() {
 		return reponsesQuestion;
 	}
@@ -95,131 +86,225 @@ public class QuestionnaireBean implements Serializable {
 		this.reponsesQuestion = repp;
 	}
 	
-
-	//question courante du questionnaire
 	public Question getQuestionCourante()
 	{
 		return this.questionCourante;
 	}
+	
 	public void setQuestionCourante(Question q)
 	{
 		this.questionCourante=q;
 	}
 	
+	public String getIdReponseRadio() {
+		return idReponseRadio;
+	}
+
+	public void setIdReponseRadio(String idReponseRadio) {
+		this.idReponseRadio = idReponseRadio;
+	}
+
+	public List<String> getIdReponseCheck() {
+		return idReponseCheck;
+	}
+
+	public void setIdReponseCheck(List<String> idReponseCheck) {
+		this.idReponseCheck = idReponseCheck;
+	}
+	
 	//mise à jour de la question en cours : question que le candidat est en train de répondre
-	public void majQuestionCourante()
+	//String comme type de retour pour la redirection automatique à la fin du questionnaire
+	public String majQuestionCourante()
 	{
+		String retour="";
 		
-		//SaveReponseCandidat();
-		
-		//enregistrement de la réponse donnée par le candidat soit par le radio boutton(1 reponse) ou par le check( de 1 a X réponses)
-		
-		System.out.println("Enregistrement reponse Candidat  : ");
-		System.out.println("idReponseRadio : " + this.idReponseRadio);
-		
-		//if(this.reponseQuestion.getEnonceReponse()!=null )
-		//if(this.reponseQuestion.Valid())
+		//ajout de la reponse du candidat à la liste de réponses du questionnaire selon radiobutton ou checkbox
 		if(!this.idReponseRadio.isEmpty() && this.idReponseRadio!=null)
 		{
-			System.out.println("AddReponseQuestionListe");
 			this.questionnaire.AddReponseQuestionListeReponseCandidat(this.getReponseQuestionById(idReponseRadio));
 			this.idReponseRadio=new String();
-			//this.reponseQuestion=new ReponseQuestion();
 		}
 		
-		//if(this.reponsesQuestion[0].Valid())
-		System.out.println("taille tableau : " + this.idReponseCheck.size());
-		//if (this.messagess!=null && this.messagess.length>0&& this.messagess[0]!=null)
-		//if (this.reponsesQuestion.size()>0)
 		if(this.idReponseCheck!=null&& this.idReponseCheck.size()>0)
 		{
 			for(int i = 0;i < idReponseCheck.size();i++)
 			{
-				// test pour verifier si passe bien par ici
-				System.out.println("AddReponseQuestionListe a partir de la check" + i);
 				this.questionnaire.AddReponseQuestionListeReponseCandidat(this.getReponseQuestionById(idReponseCheck.get(i)));
-				
 			}
-			//this.messagess= new String[10];
 			this.idReponseCheck=new ArrayList<String>();
-			//this.reponsesQuestion=new ArrayList<ReponseQuestion>();
 		}
-		
 		
 		if(this.questionnaire.getListeQuestions().size()-1==this.questionnaire.getListeQuestions().indexOf(questionCourante))
 		{
-			
-			System.out.println("test avant sauvegarde questionnaire : ");
-			
-			for(int i = 0;i< this.questionnaire.getListeReponseCandidat().size();i++)
-			{
-				System.out.println(" i : "+i + "  , id :  "+ this.questionnaire.getListeReponseCandidat().get(i).getIdReponse() + " , enonce : " + this.questionnaire.getListeReponseCandidat().get(i).getEnonceReponse());
-			}
-			
-			System.out.println("Sauvegarde questionnaire");
+			//dernière question posée
+			retour = "finQuestionnaire";
 			saveQuestionnaire();
 		}
 		else
 		{
-			
-			// verif is null de la question
+			//des questions doivent encore être passées
 			if (questionCourante != null) {
-				System.out.println("passage question suivante");
 				this.questionCourante = this.questionnaire.getListeQuestions().get(this.questionnaire.getListeQuestions().indexOf(questionCourante)+1);
 			}
 			else
 			{
-				System.out.println("recuperation premiere question");
+				//recuperation première question
 				questionCourante=this.questionnaire.getListeQuestions().get(0);
-				
 			}
 		}
+		return retour;
 	}
 	
-	//enregistrement de la réponse du candidat pour la question
-	public void SaveReponseCandidat()
-	{
-		Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        
-     //   ReponseCandidat r = new ReponseCandidat(this.questionnaire,this.listeQuestions.get(0).getListeReponsesQuestion().get(0));
-       // r.setQuestionnaire(this.questionnaire);	
-  //      session.save(r);
-        	
-        session.getTransaction().commit();
-        session.close();
-	}
-	
-	//Enregistrement du questionnaire dans la bd
 	public void saveQuestionnaire()
 	{
 		Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        
-        //enregistrement du questionnaire dans la base
-        //session.save(this.questionnaire);
-        
-        // test avec persist():
-        // session.persist(this.questionnaire);
-        
-        //test avec saveorUpdate
-        
         session.saveOrUpdate(this.questionnaire);
         session.getTransaction().commit();
         session.close();
 	}
 	
+	public int calculScoreQuestionnaire(int idQuestionnaire)
+	{
+		int score = 0;		
+		List<ReponseQuestion> repcandidat = new ArrayList<ReponseQuestion>();
+		
+		//récupération de toutes les réponses données par le candidat pour le questionnaire donné
+		repcandidat= getReponseQuestionCandidatByQuestionnaireId(idQuestionnaire);
+		
+		List<Question> listQuestionsPosees = new ArrayList<Question>();
+		
+		//jonglage avec seulement les bonnes reponses : les autres seront à 0
+		//remplissage des questions posées lors du questionnaire
+		for (int i=0;i<repcandidat.size();i++)
+		{
+				if (!listQuestionsPosees.contains(repcandidat.get(i).getQuestion()))
+				{
+					listQuestionsPosees.add(repcandidat.get(i).getQuestion());
+				}
+			
+		}
+		for (Question ques : listQuestionsPosees) {
+			//comparaison des reponses données avec les reponses à la question, si le meme nombre de bonnes réponse est trouvé : on ajoute le poids	
+			if(isBonnesReponsesQuestionDonnee(ListeReponseCandidatByQuestion(repcandidat,ques.getIdQuestion()),ques))
+			{
+				score += ques.getPoids();
+			}
+		}
+        return score;
+	}
 	
-	//Méthode pour récuperer(par query) la liste des questions aléatoires pour le questionnaire à faire passer
-	//eventuellement pour la suite rajouter un parametre pour choisir le nombre de questions
+	public boolean isBonnesReponsesQuestionDonnee( List<ReponseQuestion> reponsesQuestion, Question question)
+	{
+		boolean valide = true;
+		if(reponsesQuestion.size()!=question.ListeBonneReponseQuestion().size())
+		{
+			valide=false;
+		}
+		
+		for (ReponseQuestion reponse: reponsesQuestion) {
+			if(reponse.getBonneReponse()==0)
+			{
+				valide = false;
+			}
+		}	
+		return valide;
+	}
+	
+	public List<ReponseQuestion> ListeReponseCandidatByQuestion(List<ReponseQuestion> rq, int idQuestion)
+	{
+		List<ReponseQuestion> listreponse=new ArrayList<ReponseQuestion>();
+		
+		
+		for (ReponseQuestion reponsesquestions : rq) {
+			if(reponsesquestions.getQuestion().getIdQuestion()==idQuestion)
+			{
+				listreponse.add(reponsesquestions);
+		    }
+		}
+		
+		return listreponse;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public int calculScoreMaximal(int idQuestionnaire)
+	{
+		int score = 0;		
+        Questionnaire q = new Questionnaire();
+        Transaction trns = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            trns = session.beginTransaction();
+            Query quer = session.createSQLQuery("SELECT SUM(q.Poids) FROM question_questionnaire qq, Question q, Questionnaire ques WHERE ques.IdQuestionnaire = :idQuestionnaire AND q.idQuestion=qq.idQuestion AND ques.idQuestionnaire=qq.idQuestionnaire");
+            quer.setParameter("idQuestionnaire", idQuestionnaire);
+           
+            //conversion en BigDecimal (retour renvoyé par le sum) puis conversion en int pour renvoi résultat
+           score= ((BigDecimal) quer.list().get(0)).intValue();
+           System.out.println("score maximal :  "+ score);
+            
+        } 
+        catch (RuntimeException e) {
+            e.printStackTrace();
+        } 
+        finally {
+            session.close();
+        }
+        return score;
+	}	
+	
+	public List<ReponseQuestion> getReponseQuestionCandidatByQuestionnaireId(int idQuestionnaire)
+	{
+		List<ReponseQuestion> listquestion = new ArrayList<ReponseQuestion>();
+		Transaction trns = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            trns = session.beginTransaction();
+            Query quer = session.createSQLQuery("SELECT rq.* FROM reponse_question rq, reponse_candidat rc WHERE rq.idReponseQuestion= rc.idReponseQuestion AND rc.idQuestionnaire= :idQuestionnaire ORDER BY rq.idQuestion").addEntity(ReponseQuestion.class);
+            quer.setParameter("idQuestionnaire", idQuestionnaire);
+            System.out.println("id questionnaire : "+ idQuestionnaire);
+            listquestion= (List<ReponseQuestion>) quer.list();     
+        } 
+        catch (RuntimeException e) {    	
+            e.printStackTrace();
+            return null;
+        } 
+        finally {
+            session.close();
+        }
+        return listquestion;
+	}
+	
+	//pas encore utilisée mais fonctionnelle
+	//utilisée lors de la gestion des questionnairs (coté recruteur) pour récuperer un questionnaire donné
+	public Questionnaire getQuestionnaireById(int idQuestionnaire)
+	{
+		Questionnaire q = new Questionnaire();
+		Transaction trns = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            trns = session.beginTransaction();
+            Query quer = session.createSQLQuery("SELECT q.* FROM Questionnaire q WHERE q.idQuestionnaire= :idQuestionnaire").addEntity(Questionnaire.class);
+            quer.setParameter("idQuestionnaire", idQuestionnaire);
+            q= (Questionnaire) quer.list().get(0); 
+        } 
+        catch (RuntimeException e) {
+            e.printStackTrace();
+            return null;    
+        } 
+        finally {
+            session.close();
+        }
+        return q;
+	}
+	
 	public String ListeQuestionsAleatoire(int idtheme)
 	{
-		//variable pour choisir le nombre de questions que contiendra le questionnaire
-		int nbQuestion = 5;
+		//variable pour choisir le nombre de questions que contiendra le questionnaire 
+		// mis en brut : 15, possibilité d'évolution:  nombre de questions en parametre choisi par l'utilisateur
+		int nbQuestion = 15;
 		
 		String res;
 		res = this.ListeQuestionByTheme(idtheme);
-		System.out.println("Resultat listeQuestionByTheme : " + res);
 		
 		//On recherche un random ssi la recherche des questions par theme a bien retourné un résultat
 		if (res=="success")
@@ -228,6 +313,10 @@ public class QuestionnaireBean implements Serializable {
 			Random randomizer = new Random();
 			Question random;
 			int i=0;
+			//si le nombre de questions demandé < nombre de questions disponibles
+			if(nbQuestion>this.listeQuestions.size())
+				nbQuestion=this.listeQuestions.size();
+			
 			while(i<nbQuestion)
 			{
 				random = this.listeQuestions.get(randomizer.nextInt(this.listeQuestions.size()));
@@ -235,165 +324,55 @@ public class QuestionnaireBean implements Serializable {
 				{
 					listeRandom.add(random);
 					i++;
-					System.out.println("Valeur de i : "+i);
 				}
-				
-				System.out.println("passe par ici");
 			}
-			System.out.println("passe par la");
-		
-				this.questionnaire.setListeQuestions(listeRandom);
-				System.out.println("passe par la aussi");
+			this.questionnaire.setListeQuestions(listeRandom);
+			//mise à jour de la question courante
+			majQuestionCourante();
 		}
-		
-				majQuestionCourante();
-		
 		return res;
 	}
 	
-	
-	//recupération (par query) de la liste de toutes les questions avec le même theme
-	//suppressWarning obligatoire 
 	@SuppressWarnings("deprecation")
 	public String ListeQuestionByTheme(int idtheme){
-		
         Transaction trns = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        
         try {
             trns = session.beginTransaction();
-            //Query quer= session.createQuery("select nomCreateur from Question");
+            
+            //dans la query : obligatoire d'avoir les SELECT, FROM etc. en majuscule
             Query quer = session.createSQLQuery("SELECT e.* FROM Question e WHERE e.IdTheme= :theme").addEntity(Question.class);
             quer.setParameter("theme", idtheme);
-            //Modification de la liste des questions du questionnaire 
-           // this.ques.setListeQuestions(quer.list());
-            System.out.println("id Theme : "+ idtheme);
            this.listeQuestions= quer.list();
-           
-            
-        } catch (RuntimeException e) {
-        	
+        } 
+        catch (RuntimeException e) {
             e.printStackTrace();
             return "failed";
-            
-        } finally {
+        } 
+        finally {
             session.close();
-        }
-        
+        }  
         return "success";
     }
-	
-	/*
-	private List<ReponseCandidat> listeReponsesCandidat;
-	
-	@OneToMany(mappedBy="questionnaire", fetch = FetchType.EAGER)
-	public List<ReponseCandidat> getListeReponsesCandidat() {
-		return listeReponsesCandidat;
-	}
-	
-	public void setListeReponsesCandidat(List<ReponseCandidat> listeReponsesCandidat) {
-		this.listeReponsesCandidat = listeReponsesCandidat;
-	}
-	
-	public void addReponseCandidat(ReponseCandidat r)
-	{
-		this.listeReponsesCandidat.add(r);
-	}
-	*/
-	private String idReponseRadio= new String();
-	private List<String> idReponseCheck = new ArrayList<String>();
 	
 	public ReponseQuestion getReponseQuestionById(String idreponse)
 	{
 		ReponseQuestion res = new ReponseQuestion();
 		Transaction trns = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
-        
         try {
             trns = session.beginTransaction();
-            //Query quer= session.createQuery("select nomCreateur from Question");
             Query quer = session.createSQLQuery("SELECT rq.* FROM reponse_question rq WHERE rq.idReponseQuestion= :idrep").addEntity(ReponseQuestion.class);
             quer.setParameter("idrep", idreponse);
-            //Modification de la liste des questions du questionnaire 
-           // this.ques.setListeQuestions(quer.list());
-            System.out.println("id reponse : "+ idreponse);
            res= (ReponseQuestion) quer.list().get(0);
-           
-            
-        } catch (RuntimeException e) {
-        	
+        } 
+        catch (RuntimeException e) {
             e.printStackTrace();
             return null;
-            
-        } finally {
+        } 
+        finally {
             session.close();
         }
-        
         return res;
 	}
-	
-	/*
-	 private String message = new String();
-
-	 private List<String> messages;
-	 
-	 private String[] messagess = new String[10];
-	 
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-
-		public String[] getMessagess() {
-			return messagess;
-		}
-
-		public void setMessagess(String[] messagess) {
-			this.messagess = messagess;
-		}
-
-
-		public List<String> getMessages() {
-			return messages;
-		}
-
-
-		public void setMessages(List<String> messages) {
-			this.messages = messages;
-		}
-
-
-*/
-	
-		public String getIdReponseRadio() {
-			return idReponseRadio;
-		}
-
-
-		public void setIdReponseRadio(String idReponseRadio) {
-			this.idReponseRadio = idReponseRadio;
-		}
-
-
-		public List<String> getIdReponseCheck() {
-			return idReponseCheck;
-		}
-
-
-		public void setIdReponseCheck(List<String> idReponseCheck) {
-			this.idReponseCheck = idReponseCheck;
-		}
-
-		
-	
-	
-
-
-	
-	
-	
 }

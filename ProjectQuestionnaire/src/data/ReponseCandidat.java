@@ -1,5 +1,6 @@
 package data;
 
+import java.io.Serializable;
 import java.sql.Time;
 
 import javax.faces.bean.SessionScoped;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "reponse_candidat")
 @SessionScoped*/
-public class ReponseCandidat {
+public class ReponseCandidat implements Serializable{
 
 	/*
 	 * Classe plus utilisée pour le moment : premiere solution choisie : utiliser deux ManyToOne pour representer les reponses_candidat, changé pour utiliser un manyToMany 

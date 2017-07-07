@@ -1,16 +1,10 @@
 package data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,8 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
@@ -32,7 +24,7 @@ import data.Question;
 @Entity
 @Table(name = "questionnaire")
 @SessionScoped
-public class Questionnaire {
+public class Questionnaire implements Serializable{
 
 	private int idQuestionnaire;
 	
@@ -50,11 +42,10 @@ public class Questionnaire {
 
 	private List<ReponseQuestion> listeReponseCandidat = new ArrayList<ReponseQuestion>();
 	
-	
 	public Questionnaire(){	
 		this.datePassage= new Date();
 	}
-	
+		
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column (name="IdQuestionnaire", nullable=false)
@@ -118,7 +109,6 @@ public class Questionnaire {
 		return this.dureeRealise;
 	}
 
-	
 	public void setDureeRealise(Timestamp dr)
 	{
 		this.dureeRealise=dr;
@@ -158,23 +148,4 @@ public class Questionnaire {
 	{
 		this.listeReponseCandidat.add(rq);
 	}
-	
-	
-	//private String note;
-	
-		/*private Proprietaire proprietaire;
-		
-		@ManyToOne
-		@JoinColumn(name="IdProprietaire", nullable=false)
-		public Proprietaire getProprietaire()
-		{
-			return this.proprietaire;
-		}
-		
-		public void setProprietaire(Proprietaire p)
-		{
-			this.proprietaire=p;
-		}*/
-	
-	
 }

@@ -1,11 +1,8 @@
 package data;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,16 +18,20 @@ import beans.ReponseQuestionBean;
 @Entity
 @Table(name = "question")
 @SessionScoped
-//@ApplicationScoped
 public class Question implements Serializable{
-
-	private static final long serialVersionUID = 8985762883582831252L;
+	
 	private int idQuestion;	
+	
 	private int type;	
+	
 	private String nomCreateur ;	
+	
 	private String enonce;	
+	
 	private int poids;	
+	
 	private int theme;
+	
 	private List<ReponseQuestion> ListeReponsesQuestion;
 	
 	public Question(){	}
@@ -114,20 +114,20 @@ public class Question implements Serializable{
 		this.ListeReponsesQuestion=list;
 	}
 	
-	/*
-	private List<Questionnaire> questionnaire;
-	
-	//manytomany multidirectinonel : pas besoin, les questions n'ont pas a acceder aux questionnaires
-	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "listeQuestions")
-	public List<Questionnaire> getQuestionnaire()
+	//pas de get car sinon interprété comme une proprieté reliée à la table question
+	//récuperation de la liste de bonnes réponses de la question
+	public List<ReponseQuestion> ListeBonneReponseQuestion()
 	{
-		return this.questionnaire;
+		List<ReponseQuestion> listbonnerep = new ArrayList<ReponseQuestion>();
+		
+		for(int i = 0;i<this.ListeReponsesQuestion.size();i++)
+		{
+			if(this.ListeReponsesQuestion.get(i).getBonneReponse()==1)
+			{
+				listbonnerep.add(this.ListeReponsesQuestion.get(i));
+			}
+		}
+		return listbonnerep;
+
 	}
-	
-	public void setQuestionnaire(List<Questionnaire> q)
-	{
-		this.questionnaire=q;
-	}*/
-	
 }

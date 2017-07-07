@@ -1,31 +1,27 @@
 package data;
 
-import java.util.List;
+import java.io.Serializable;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "reponse_question")
-//@SessionScoped
-@ApplicationScoped
-public class ReponseQuestion {
+@SessionScoped
+public class ReponseQuestion implements Serializable{
 
 	private int idReponse;
 	
 	private String enonceReponse;
 	
-	private Boolean bonneReponse;
+	private int bonneReponse;
 	
 	private Question question;
 		
@@ -44,7 +40,7 @@ public class ReponseQuestion {
 	}
 	
 	@Column(name = "BonneReponse")
-	public Boolean getBonneReponse()
+	public int getBonneReponse()
 	{
 		return this.bonneReponse;
 	}
@@ -59,7 +55,7 @@ public class ReponseQuestion {
 		this.enonceReponse=e;
 	}
 	
-	public void setBonneReponse(Boolean b)
+	public void setBonneReponse(int b)
 	{
 		this.bonneReponse=b;
 	}
@@ -75,34 +71,4 @@ public class ReponseQuestion {
 	{
 		this.question=q;
 	}
-	
-	//surcharge de la méthode toString pour pouvoir afficher les enoncés des reponses de question
-	/*public String toString()
-	{
-		return this.enonceReponse;
-	}*/
-	
-	public boolean Valid()
-	{
-		return this.idReponse !=0 && this.enonceReponse !=null && this.bonneReponse != null && this.question !=null;
-	}
-	
-	
-	/*
-	 * Solution utilisée lorsque association ManyToOne avec ReponseCandidat mis en place
-	 * 
-	private List<ReponseCandidat> listeReponsesCandidat;
-	
-	@OneToMany(mappedBy="reponseQuestion", fetch = FetchType.EAGER)
-	public List<ReponseCandidat> getListeReponsesCandidat()
-	{
-		return this.listeReponsesCandidat;
-	}
-	
-	public void setListeReponsesCandidat(List<ReponseCandidat> list)
-	{
-		this.listeReponsesCandidat=list;
-	}
-	*/
-	
 }

@@ -4,38 +4,25 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
     version="2.2">
-
-
-
-	 <navigation-rule>
+    
+	<navigation-rule>
 		<from-view-id>PasserQuestionnaire.xhtml</from-view-id>
-		<navigation-case>
-			
-			<from-outcome>success</from-outcome>
-			<to-view-id>/listeQuestions.xhtml</to-view-id>
+		<navigation-case>	
+			<from-outcome>finQuestionnaire</from-outcome>
+			<to-view-id>/finQuestionnaire.xhtml</to-view-id>
 		</navigation-case>
-		
 	</navigation-rule>
-	
+	<navigation-rule>
+		<from-view-id>index.xhtml</from-view-id>
+		<navigation-case>
+			<to-view-id>/ChoisirTheme.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 	<navigation-rule>
 		<from-view-id>ChoisirTheme.xhtml</from-view-id>
 		<navigation-case>
-			
 			<from-outcome>success</from-outcome>
 			<to-view-id>/PasserQuestionnaire.xhtml</to-view-id>
 		</navigation-case>
-		
 	</navigation-rule>
-	
-	
-	<converter>
-		<converter-id>ReponseQuestionConverter</converter-id>
-		<converter-class>converters.ReponseQuestionConverter</converter-class>
-	</converter>
-	
-	<converter>
-		<converter-id>GenericConverter</converter-id>
-		<converter-class>converters.GenericConverter</converter-class>
-	</converter>
-	
 </faces-config>

@@ -5,38 +5,65 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
-	
-
-<p:outputLabel value="Test affichage question"></p:outputLabel>
-
-	<f:view>
-		<h:form>
-			<h:outputLabel value="#{Questionnaires.questionCourante.enonce}"/>
-			
-			
-   				 <h:selectOneRadio id= "RadioButtonReponse" value = "#{Questionnaires.idReponseRadio}" rendered="#{Questionnaires.questionCourante.type == '1'}" >
-      			  
-          			  <f:selectItems var = "radio" value="#{Questionnaires.questionCourante.listeReponsesQuestion}" itemLabel="#{radio.enonceReponse}" itemValue="#{radio.idReponse}"/>
-          			  
-          			  
-      			  </h:selectOneRadio>
-      			  
-      			   <h:selectManyCheckbox id= "CheckBoxReponse" value = "#{Questionnaires.idReponseCheck}" rendered="#{Questionnaires.questionCourante.type == '2'}" >
-      			   
-          			  <f:selectItems var = "check" value="#{Questionnaires.questionCourante.listeReponsesQuestion}" itemLabel = "#{check.enonceReponse}" itemValue="#{check.idReponse}"/>
-          			  
-      		      </h:selectManyCheckbox>
-      		      
-      		      
-      			 
-      			  
-       		      
-      		      
-   				 
-			<h:commandButton value="Next" action="#{Questionnaires.majQuestionCourante}" />
-			
-        
-		</h:form>
-	</f:view>
-
+	<head>
+		<style>
+			.containerQuestions
+			{
+				margin:auto;
+				width:60%;
+				height:100%;
+				padding:15px;
+				border-radius:4px;
+				background-color:#D4D4D4;
+				text-align:center;
+				overflow-y:auto;
+				orientation:center;
+				border:1px solid";
+			}
+			.containerReponse
+			{
+				text-align:center;
+			}
+			.buttonNext
+			{
+				font-weight:bold;
+				color: #F79424;
+				font-size: 18px;
+				line-height:18px;
+				padding: 11px 35px;
+				border-radius: 8px;
+				border: 2px solid;
+				width:auto;
+				margin:4px; 
+				margin-left:85%;
+				text-align:right;
+			}
+			.buttonNext:hover
+			{
+				background-color: #4A575F";
+			}
+		</style>
+	</head>
+	<body>
+		<p:outputLabel value="Affichage question"></p:outputLabel>
+		<f:view>
+			<div><img src="http://www.gfi.world/assets/gfi-informatique-logo.jpg?e7e5b98ad5fda0e7acab4f1ce142a128" align="right" width="350" height="250" /></div>
+			<h:form>
+				<div >				
+					<div class = "containerQuestions">
+						<div>
+							<h:outputLabel style = "font-weight: bold;" value="#{Questionnaires.questionCourante.enonce}"/>
+						</div>
+		   			    <h:selectOneRadio layout="pageDirection" class = "containerReponse" id="RadioButtonReponse" value = "#{Questionnaires.idReponseRadio}" rendered="#{Questionnaires.questionCourante.type == '1'}" required="true" requiredMessage="Veuillez sélectionner une réponse">
+          			    	<f:selectItems style = "font-weight: bold;" var = "radio" value="#{Questionnaires.questionCourante.listeReponsesQuestion}" itemLabel="#{radio.enonceReponse}" itemValue="#{radio.idReponse}"/>          			  		  
+		      			</h:selectOneRadio>
+		      			<h:selectManyCheckbox layout="pageDirection"  class = "containerReponse" id= "CheckBoxReponse" value = "#{Questionnaires.idReponseCheck}" rendered="#{Questionnaires.questionCourante.type == '2'}" required="true" requiredMessage="Veuillez sélectionner au moins une réponse" >
+		 	 				<f:selectItems  var = "check" value="#{Questionnaires.questionCourante.listeReponsesQuestion}" itemLabel = "#{check.enonceReponse}" itemValue="#{check.idReponse}"/>
+		      			</h:selectManyCheckbox>
+		      		    <h:commandButton  class="buttonNext" value="Next" action="#{Questionnaires.majQuestionCourante}" />
+		      		 </div>
+	      		</div>           
+			</h:form>
+		</f:view>
+	</body>
 </html>

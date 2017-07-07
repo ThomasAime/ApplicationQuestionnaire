@@ -5,25 +5,54 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
-	
-
-<p:outputLabel value="Affichage Themes"></p:outputLabel>
-
-	<f:view>
-	
-	
-	
-	<h:form>
-		 <h:outputLabel value="Liste Themes"/>
-            	<ui:repeat var="listThem" value="#{Themes.listeThemes}">
-            		<h:commandButton value="#{listThem.nomTheme}" action="#{Questionnaires.ListeQuestionsAleatoire(listThem.idTheme)}" />
-            		
-            	</ui:repeat>       
-            	
-        </h:form>
-	
-        
-
-	</f:view>
-
+	<head>
+		<style>
+			.containerTheme
+			{
+				margin:auto;
+				width:60%;
+				height:100%;
+				padding:15px;
+				border-radius:4px;
+				background-color:#D4D4D4;
+				text-align:center;
+				overflow-y:auto;
+				orientation:center;
+				border:1px solid";
+			}
+			.buttonTheme
+			{
+				font-weight:bold;
+				color: #F79424;
+				font-size: 20px;
+				line-height:20px;
+				padding: 14px 40px;
+				border-radius: 8px;
+				border: 2px solid;
+				width:auto;
+				margin:4px; 
+			}
+			.buttonTheme:hover
+			{
+				background-color: #4A575F";
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<f:view >
+			<div><img src="http://www.gfi.world/assets/gfi-informatique-logo.jpg?e7e5b98ad5fda0e7acab4f1ce142a128" align="right" width="350" height="250" /></div>
+				<div class="containerTheme">
+					<h:form>
+						<h:outputLabel style = "font-weight: bold;" value="Liste Themes"/>
+			           	<ui:repeat var="listThem" value="#{Themes.listeThemes}">
+			           		<div style="text-align: center;">
+			           			<h:commandButton styleClass="buttonTheme"  value="#{listThem.nomTheme}" action="#{Questionnaires.ListeQuestionsAleatoire(listThem.idTheme)}" />
+			           		</div>
+			           	</ui:repeat>    
+			        </h:form>
+		    	</div>
+			</f:view>
+		</div>
+	</body>
 </html>
